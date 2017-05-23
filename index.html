@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jquery List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="w3-card-2 w3-margin" style="max-width:400px;">
+    <header class="w3-container w3-light-grey w3-padding-16">
+        <h3>My Shopping List</h3>
+    </header>
+
+    <div class="w3-container w3-light-grey w3-padding-16">
+        <div class="w3-row w3-margin-top">
+            <div class="w3-col s10">
+                <input id="virtual_ip_input" placeholder="Add shopping items here" class="w3-input w3-border w3-padding">
+            </div>
+            <div class="w3-col s2">
+                <button id="add_virtual_ip" class="w3-btn w3-padding w3-green"><i class="material-icons">add</i></button>
+            </div>
+        </div>
+        <p id="errortext" class="w3-padding-left w3-text-red"></p>
+    </div>
+
+    <ul id="virtual_ip_list" class="w3-ul"></ul>
+
+</div>
+
+<script>
+    $(document).ready(function(){
+        $.getJSON("students.json", function(result){
+            $.each(result, function(i, field){
+                $("#virtual_ip_list").append('<li class="w3-padding-16"><div id="name" class="w3-col s10">'+field.Name+'</div><div class="w3-col s2"><a href="#"><i id="del_virtual_ip" class="material-icons">delete</i></a></div></li>');
+            });
+        });
+
+        $( document ).on( "click", function( event ) {
+            $("#errortext").text("");
+            if(event.target.id === "add_virtual_ip") {
+                var fieldExsisted = false;
+                if ($("#virtual_ip_input").val()) {
+                    $( "li div#name" ).each(function( index ) {
+                        if ( $( this ).text() === $("#virtual_ip_input").val() ) {
+                            fieldExsisted = true;
+                        }
+                    });
+                    if (fieldExsisted)
+                    {
+                        $("#errortext").text("The name was used once!");
+                        return false;
+                    }
+                    $("#virtual_ip_list").prepend('<li class="w3-padding-16"><div id="name" class="w3-col s10">'+$("#virtual_ip_input").val()+'</div><div class="w3-col s2"><a href="#"><i id="del_virtual_ip" class="material-icons">delete</i></a></div></li>');
+                    $("#virtual_ip_input").val("");
+                } else {
+                    $("#errortext").text("The name should not be null!");
+                    return false;
+                }
+            }
+            else if(event.target.id === "del_virtual_ip") {
+                $( event.target ).closest("li").remove();
+            }
+        });
+    });
+
+</script>
+
+</body>
+</html>
